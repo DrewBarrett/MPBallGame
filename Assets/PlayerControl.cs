@@ -9,6 +9,7 @@ public class PlayerControl : NetworkBehaviour
     // Use this for initialization
     public AudioClip KnifeEquipSound;
     public AudioClip[] KnifeStabSounds;
+    public GameObject bloodPrefab;
     bool knifeOut = false;
     void Start()
     {
@@ -142,6 +143,7 @@ public class PlayerControl : NetworkBehaviour
     void RpcAttacked(Vector3 attackSpot)
     {
         GetComponent<AudioSource>().PlayOneShot(KnifeStabSounds[Random.Range(0, KnifeStabSounds.Length)]);
+        Instantiate(bloodPrefab, attackSpot, Quaternion.identity);
     }
     //[Command]
     //void CmdSetRotation(float rot)

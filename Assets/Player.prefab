@@ -245,6 +245,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8c5af3efbffd4a947ac41643749bce92, type: 3}
   - {fileID: 8300000, guid: d72f48f867f28494a8df969c29df9d7b, type: 3}
   - {fileID: 8300000, guid: 00dc2aebcf139904d9e4bfad71f9126f, type: 3}
+  bloodPrefab: {fileID: 148604, guid: 3f323ffc5af32ca45a657acabccebfa1, type: 2}
 --- !u!114 &11494790
 MonoBehaviour:
   m_ObjectHideFlags: 1
