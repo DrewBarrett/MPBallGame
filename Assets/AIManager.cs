@@ -46,6 +46,7 @@ public class AIManager : NetworkBehaviour {
             RespawnQ.Add(AIBall);
         }
         RespawnQ.Add(go);
-        go.GetComponent<PlayerControl>().RpcSetSpawnTime( (RespawnQ.Count * SpawnTime) - remainingTime );
+        go.GetComponent<PlayerControl>().RpcSetSpawnTime( (RespawnQ.Count * SpawnTime) + remainingTime - 3);
+        Debug.Log("Size of respawn q: " + RespawnQ.Count + " time: " + RespawnQ.Count * SpawnTime + " time minus remaining time: " + remainingTime);
     }
 }

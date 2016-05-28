@@ -31,7 +31,7 @@ public class PlayerControl : NetworkBehaviour
     {
         if (!isLocalPlayer)
             return;
-        Debug.Log("Collision with " + collision.gameObject.tag + collision.IsTouching(gameObject.GetComponentInChildren<Collider2D>(false)));
+        //Debug.Log("Collision with " + collision.gameObject.tag + collision.IsTouching(gameObject.GetComponentInChildren<Collider2D>(false)));
         if (collision.gameObject.tag == "Wall")
         {
 
@@ -100,7 +100,7 @@ public class PlayerControl : NetworkBehaviour
             if (sr.gameObject.name == "knife")
             {
                 sr.gameObject.SetActive(knifeStatus);
-                Debug.Log("We have changed our knife status to " + knifeStatus);
+                //Debug.Log("We have changed our knife status to " + knifeStatus);
                 return true;
             }
         }

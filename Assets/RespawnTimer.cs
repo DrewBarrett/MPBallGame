@@ -15,7 +15,8 @@ public class RespawnTimer : MonoBehaviour {
         timeRemaining -= Time.deltaTime;
         if (timeRemaining < 0)
             gameObject.GetComponent<Text>().enabled = false;
-        GetComponent<Text>().text = "Respawn in " + Mathf.RoundToInt(timeRemaining) + " seconds";
+        //truncate time remaining to two decimal places
+        GetComponent<Text>().text = "Respawn in " + timeRemaining.ToString("F2") + " seconds";
 	}
     public void UpdateTime(float time)
     {

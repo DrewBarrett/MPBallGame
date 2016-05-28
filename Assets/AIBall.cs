@@ -15,7 +15,7 @@ public class AIBall : NetworkBehaviour
         timer = Random.Range(3f, 10f);
         GetComponent<Rigidbody2D>().rotation = (Random.Range(1f, 359f));
         rotation = GetComponent<Rigidbody2D>().rotation;
-        Debug.Log(rotation);
+        //Debug.Log(rotation);
         GetComponent<NetworkTransform>().SetDirtyBit(1);
     }
 
