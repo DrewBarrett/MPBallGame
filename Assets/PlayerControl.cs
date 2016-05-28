@@ -65,6 +65,7 @@ public class PlayerControl : NetworkBehaviour
         {
             Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Debug.DrawLine(transform.position, target, Color.red, .10f);
+            //Gizmos.DrawLine(transform.position, target);
             Vector3 targetRotation = transform.position - target;
             float rot = Mathf.Atan2(targetRotation.x, -1 * targetRotation.y) * (180 / Mathf.PI);
             GetComponent<Rigidbody2D>().MoveRotation(rot);
@@ -135,15 +136,29 @@ public class PlayerControl : NetworkBehaviour
     [ClientRpc]
     public void RpcRespawn()
     {
+        gameObject.SetActive(false);
         if (!isLocalPlayer)
             return;
         transform.position = GameObject.FindGameObjectWithTag("Respawn").transform.position;
+        //respawnTime = CmdBeginRespawn();
     }
     [ClientRpc]
     void RpcAttacked(Vector3 attackSpot)
     {
         GetComponent<AudioSource>().PlayOneShot(KnifeStabSounds[Random.Range(0, KnifeStabSounds.Length)]);
-        Instantiate(bloodPrefab, attackSpot, Quaternion.identity);
+        GameObject blood = (GameObject)Instantiate(bloodPrefab, attackSpot, Quaternion.identity);
+        Destroy(blood, 10f);
+    }
+    [Command]
+    void CmdBeginRespawn()
+    {
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<AIManager>().Respawn(gameObject);
+    }
+    [ClientRpc]
+    public void RpcEndRespawn()
+    {
+        //re-enable the player for everyone.
+        gameObject.SetActive(true);
     }
     //[Command]
     //void CmdSetRotation(float rot)
