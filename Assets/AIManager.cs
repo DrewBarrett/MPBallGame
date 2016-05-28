@@ -20,13 +20,14 @@ public class AIManager : NetworkBehaviour {
         if(remainingTime <= 0)
         {
             GameObject ball = null;
-            remainingTime = SpawnTime;
+            
             if(RespawnQ.Count > 0)
             {
                 ball = RespawnQ[0];
                 RespawnQ.RemoveAt(0);
             }
-            if(!ball || !ball.GetComponent<PlayerControl>())
+            remainingTime = SpawnTime;
+            if (!ball || !ball.GetComponent<PlayerControl>())
             {
                 //spawn an AI
                 ball = (GameObject)Instantiate(AIBall, GameObject.FindGameObjectWithTag("Respawn").transform.position, Quaternion.identity);
@@ -34,7 +35,6 @@ public class AIManager : NetworkBehaviour {
                 return;
             }
             ball.GetComponent<PlayerControl>().RpcEndRespawn();
-            
         }
 	}
 
@@ -46,6 +46,6 @@ public class AIManager : NetworkBehaviour {
             RespawnQ.Add(AIBall);
         }
         RespawnQ.Add(go);
-        //return (RespawnQ.Count * SpawnTime) - remainingTime;
+        go.GetComponent<PlayerControl>().RpcSetSpawnTime( (RespawnQ.Count * SpawnTime) - remainingTime );
     }
 }

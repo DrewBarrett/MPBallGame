@@ -10,11 +10,11 @@ public class PlayerControl : NetworkBehaviour
     public AudioClip KnifeEquipSound;
     public AudioClip[] KnifeStabSounds;
     public GameObject bloodPrefab;
+    public GameObject _respawnText;
     bool knifeOut = false;
     void Start()
     {
-
-
+        _respawnText = GameObject.Find("RespawnText");    
     }
 
     void UpdateRotation(float target)
@@ -140,7 +140,7 @@ public class PlayerControl : NetworkBehaviour
         if (!isLocalPlayer)
             return;
         transform.position = GameObject.FindGameObjectWithTag("Respawn").transform.position;
-        //respawnTime = CmdBeginRespawn();
+        CmdBeginRespawn();
     }
     [ClientRpc]
     void RpcAttacked(Vector3 attackSpot)
@@ -158,7 +158,15 @@ public class PlayerControl : NetworkBehaviour
     public void RpcEndRespawn()
     {
         //re-enable the player for everyone.
+        Debug.Log("Rpc Respawning player now!");
         gameObject.SetActive(true);
+    }
+    [ClientRpc]
+    public void RpcSetSpawnTime(float time)
+    {
+        if (!isLocalPlayer)
+            return;
+        _respawnText.GetComponent<RespawnTimer>().UpdateTime(time);
     }
     //[Command]
     //void CmdSetRotation(float rot)
