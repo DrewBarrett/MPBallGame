@@ -9,6 +9,7 @@ public class PlayerControl : NetworkBehaviour
     // Use this for initialization
     public AudioClip KnifeEquipSound;
     public AudioClip[] KnifeStabSounds;
+    public AudioClip[] DeathSounds;
     public GameObject bloodPrefab;
     public GameObject _respawnText;
     bool knifeOut = false;
@@ -148,6 +149,7 @@ public class PlayerControl : NetworkBehaviour
         GetComponent<AudioSource>().PlayOneShot(KnifeStabSounds[Random.Range(0, KnifeStabSounds.Length)]);
         GameObject blood = (GameObject)Instantiate(bloodPrefab, attackSpot, Quaternion.identity);
         Destroy(blood, 10f);
+        GetComponent<AudioSource>().PlayOneShot(DeathSounds[Random.Range(0, KnifeStabSounds.Length)]);
     }
     [Command]
     void CmdBeginRespawn()
