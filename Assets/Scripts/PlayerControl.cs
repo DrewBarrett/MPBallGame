@@ -16,9 +16,14 @@ public class PlayerControl : NetworkBehaviour
     bool dead;
     void Start()
     {
-        GetComponent<Rigidbody2D>().velocity = transform.up * 2;
+        
         dead = false;
-        _respawnText = GameObject.Find("RespawnText");    
+        _respawnText = GameObject.Find("RespawnText");
+        if(isLocalPlayer)
+        {
+            GetComponent<Rigidbody2D>().velocity = transform.up * 2;
+            CmdRequestUpdate();
+        }
     }
 
     void UpdateRotation(float target)
@@ -187,6 +192,17 @@ public class PlayerControl : NetworkBehaviour
             return;
         _respawnText.GetComponent<RespawnTimer>().UpdateTime(time);
     }
+    [Command]
+    void CmdRequestUpdate()
+    {
+        RpcSendUpdate();
+    }
+    [ClientRpc]
+    void RpcSendUpdate()
+    {
+        GetComponent<NetworkTransform>().SetDirtyBit(1);
+    }
+
     void StopExisting(bool shouldStop)
     {
         
