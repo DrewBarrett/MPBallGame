@@ -164,6 +164,7 @@ public class PlayerControl : NetworkBehaviour
     [ClientRpc]
     void RpcAttacked(Vector3 attackSpot)
     {
+        GetComponent<AudioSource>().Stop();
         GetComponent<AudioSource>().PlayOneShot(KnifeStabSounds[Random.Range(0, KnifeStabSounds.Length)]);
         GameObject blood = (GameObject)Instantiate(bloodPrefab, attackSpot, Quaternion.identity);
         Destroy(blood, 10f);
