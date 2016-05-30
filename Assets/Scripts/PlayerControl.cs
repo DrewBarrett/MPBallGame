@@ -16,6 +16,7 @@ public class PlayerControl : NetworkBehaviour
     bool dead;
     void Start()
     {
+        GetComponent<Rigidbody2D>().velocity = transform.up * 2;
         dead = false;
         _respawnText = GameObject.Find("RespawnText");    
     }
@@ -38,7 +39,12 @@ public class PlayerControl : NetworkBehaviour
         if (collision.gameObject.tag == "Wall")
         {
 
-            GetComponent<Rigidbody2D>().rotation += 180;
+            //GetComponent<Rigidbody2D>().rotation += 180;
+            //Debug.Log(gameObject.transform.rotation.ToString());
+            gameObject.transform.rotation = Quaternion.Euler(0,0,180 + gameObject.transform.rotation.eulerAngles.z);
+            
+            GetComponent<Rigidbody2D>().velocity = transform.up * 2;
+            GetComponent<NetworkTransform>().SetDirtyBit(1);
         }
         else if (collision.gameObject.GetComponent<Health>() && knifeOut)
         {
@@ -63,7 +69,7 @@ public class PlayerControl : NetworkBehaviour
             return;
         }
 
-        GetComponent<Rigidbody2D>().velocity = transform.up * 2;
+        
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -71,7 +77,10 @@ public class PlayerControl : NetworkBehaviour
             //Gizmos.DrawLine(transform.position, target);
             Vector3 targetRotation = transform.position - target;
             float rot = Mathf.Atan2(targetRotation.x, -1 * targetRotation.y) * (180 / Mathf.PI);
-            GetComponent<Rigidbody2D>().MoveRotation(rot);
+            //GetComponent<Rigidbody2D>().MoveRotation(rot);
+            gameObject.transform.rotation = Quaternion.Euler(0,0, rot);
+            GetComponent<Rigidbody2D>().velocity = transform.up * 2;
+            GetComponent<NetworkTransform>().SetDirtyBit(1);
             //CmdSetRotation(rot);
         }
         if (Input.GetMouseButtonDown(1))
