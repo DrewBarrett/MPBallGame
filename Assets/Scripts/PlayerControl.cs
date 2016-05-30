@@ -153,6 +153,7 @@ public class PlayerControl : NetworkBehaviour
         if (!isLocalPlayer)
             return;
         transform.position = GameObject.FindGameObjectWithTag("Respawn").transform.position;
+        GetComponent<NetworkTransform>().SetDirtyBit(1);
         CmdBeginRespawn();
     }
     [ClientRpc]
@@ -174,6 +175,10 @@ public class PlayerControl : NetworkBehaviour
         //re-enable the player for everyone.
         Debug.Log("Rpc Respawning player now!");
         StopExisting(false);
+        if (!isLocalPlayer)
+            return;
+        GetComponent<Rigidbody2D>().velocity = transform.up * 2;
+        GetComponent<NetworkTransform>().SetDirtyBit(1);
     }
     [ClientRpc]
     public void RpcSetSpawnTime(float time)
