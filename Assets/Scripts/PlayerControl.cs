@@ -15,8 +15,7 @@ public class PlayerControl : NetworkBehaviour
     bool knifeOut = false;
     bool dead;
     void Start()
-    {
-        
+    {   
         dead = false;
         _respawnText = GameObject.Find("RespawnText");
         if(isLocalPlayer)
