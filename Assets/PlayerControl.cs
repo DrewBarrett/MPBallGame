@@ -13,8 +13,10 @@ public class PlayerControl : NetworkBehaviour
     public GameObject bloodPrefab;
     public GameObject _respawnText;
     bool knifeOut = false;
+    bool dead;
     void Start()
     {
+        dead = false;
         _respawnText = GameObject.Find("RespawnText");    
     }
 
@@ -30,7 +32,7 @@ public class PlayerControl : NetworkBehaviour
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!isLocalPlayer)
+        if (!isLocalPlayer || dead)
             return;
         //Debug.Log("Collision with " + collision.gameObject.tag + collision.IsTouching(gameObject.GetComponentInChildren<Collider2D>(false)));
         if (collision.gameObject.tag == "Wall")
@@ -54,7 +56,7 @@ public class PlayerControl : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isLocalPlayer)
+        if (!isLocalPlayer || dead)
         {
 
             //GetComponent<Rigidbody2D>().velocity = transform.up * 2;
@@ -137,7 +139,8 @@ public class PlayerControl : NetworkBehaviour
     [ClientRpc]
     public void RpcRespawn()
     {
-        gameObject.SetActive(false);
+        StopExisting(true);
+        //gameObject.SetActive(false);
         if (!isLocalPlayer)
             return;
         transform.position = GameObject.FindGameObjectWithTag("Respawn").transform.position;
@@ -161,7 +164,7 @@ public class PlayerControl : NetworkBehaviour
     {
         //re-enable the player for everyone.
         Debug.Log("Rpc Respawning player now!");
-        gameObject.SetActive(true);
+        StopExisting(false);
     }
     [ClientRpc]
     public void RpcSetSpawnTime(float time)
@@ -169,6 +172,17 @@ public class PlayerControl : NetworkBehaviour
         if (!isLocalPlayer)
             return;
         _respawnText.GetComponent<RespawnTimer>().UpdateTime(time);
+    }
+    void StopExisting(bool shouldStop)
+    {
+        
+        dead = shouldStop;
+        GetComponent<SpriteRenderer>().enabled = !shouldStop;
+        GetComponent<CircleCollider2D>().enabled = !shouldStop;
+        GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+        knifeOut = false;
+        SetKnifing(knifeOut);
+        CmdSetKnifing(knifeOut);
     }
     //[Command]
     //void CmdSetRotation(float rot)

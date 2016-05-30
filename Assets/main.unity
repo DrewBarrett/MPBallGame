@@ -213,7 +213,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22494980, guid: 59e17ec03f2ba7d4c98da1997877e6bb, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 22494980, guid: 59e17ec03f2ba7d4c98da1997877e6bb, type: 2}
       propertyPath: m_AnchoredPosition.y
@@ -770,7 +770,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0.50000006, w: 0.8660254}
   m_LocalPosition: {x: -5, y: 8.5, z: 0}
   m_LocalScale: {x: 20, y: 0.5, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 60}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -823,7 +823,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
+    m_Left: 4
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
@@ -1050,7 +1050,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: -0.50000006, w: 0.8660254}
   m_LocalPosition: {x: 5, y: 8.5, z: 0}
   m_LocalScale: {x: 20, y: 0.5, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -60}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
