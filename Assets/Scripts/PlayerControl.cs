@@ -54,7 +54,7 @@ public class PlayerControl : NetworkBehaviour
         else if (collision.gameObject.GetComponent<Health>() && knifeOut)
         {
             
-            CmdAttackGameObject(collision.gameObject);
+            CmdAttackGameObject(collision.gameObject, gameObject);
         }
     }
 
@@ -145,9 +145,19 @@ public class PlayerControl : NetworkBehaviour
         }
     }
     [Command]
-    void CmdAttackGameObject(GameObject target)
+    void CmdAttackGameObject(GameObject target, GameObject attacker)
     {
         target.GetComponent<Health>().TakeDamage();
+        if(target.gameObject.tag == "Player")
+        {
+            //if you stabbed a player
+            attacker.GetComponent<PlayerInfo>().score += 1;
+        }
+        else
+        {
+            //if you stabbed an AI
+            attacker.GetComponent<PlayerInfo>().score -= 1;
+        }
         RpcAttacked(target.transform.position);
     }
     [ClientRpc]

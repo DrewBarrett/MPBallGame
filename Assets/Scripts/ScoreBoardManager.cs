@@ -26,24 +26,33 @@ public class ScoreBoardManager : MonoBehaviour {
             Text[] textDisplays = go.GetComponentsInChildren<Text>();
             foreach (Text text in textDisplays)
             {
-                if(text.gameObject.name == "PlayerNameText")
+                if (text.gameObject.name == "PlayerNameText")
                 {
                     //update player name in scoreboard
+                    //Debug.Log("Updating player names now!");
                     text.text = player.GetComponent<PlayerInfo>().UserName;
-                    break;
+                    continue;
                 }
-                if(text.gameObject.name == "PlayerScoreText")
+                if (text.gameObject.name == "PlayerScoreText")
                 {
                     //update player score
-                    break;
+                    //Debug.Log("Updating player scores now!");
+                    text.text = player.GetComponent<PlayerInfo>().score.ToString();
+                    continue;
                 }
-                if(text.gameObject.name == "PlayerPingText")
+                if (text.gameObject.name == "PlayerPingText")
                 {
                     //update player ping
-                    break;
+                    continue;
                 }
             }
         }
+    }
+
+    public void UpdateScores()
+    {
+        //im fucking lazy
+        UpdatePlayers();
     }
 
 }

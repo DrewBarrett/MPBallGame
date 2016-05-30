@@ -5,8 +5,8 @@ using UnityEngine.Networking;
 public class PlayerInfo : NetworkBehaviour {
     [SyncVar(hook = "UserNameUpdated")]
     public string UserName;
-    [SyncVar]
-    int score;
+    [SyncVar(hook = "ScoreUpdated")]
+    public int score;
     SteamInfo si;
     ScoreBoardManager sbm;
 	// Use this for initialization
@@ -33,5 +33,10 @@ public class PlayerInfo : NetworkBehaviour {
         UserName = name;
         Debug.Log(name + " joined the game!");
         sbm.UpdatePlayers();
+    }
+    void ScoreUpdated(int val)
+    {
+        score = val;
+        sbm.UpdateScores();
     }
 }
