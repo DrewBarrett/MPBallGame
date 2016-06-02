@@ -42,4 +42,9 @@ public class Powerup {
     {
         //put yourself away in preparation for next powerup
     }
+
+    public virtual void Update()
+    {
+        //do updates here
+    }
 }

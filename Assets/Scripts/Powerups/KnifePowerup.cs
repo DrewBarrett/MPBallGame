@@ -18,4 +18,6 @@ public class KnifePowerup : PowerupChild {
             Parent.GetComponent<PlayerControl>().CmdAttackGameObject(collision.gameObject, Parent.gameObject);
         }
     }
+
+    
 }

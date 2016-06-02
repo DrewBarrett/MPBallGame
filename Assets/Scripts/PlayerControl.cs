@@ -150,6 +150,7 @@ public class PlayerControl : NetworkBehaviour
                 Debug.LogError("Where the fuck did the knife go?????");
             }*/
         }
+        powerup.Update();
 
 
     }
