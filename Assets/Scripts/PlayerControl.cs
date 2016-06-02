@@ -220,6 +220,11 @@ public class PlayerControl : NetworkBehaviour
     [Command]
     public void CmdDoAttack()
     {
+        RpcDoAttack();
+    }
+    [ClientRpc]
+    public void RpcDoAttack()
+    {
         if (isLocalPlayer)
             return;
         powerup.DoAttack();

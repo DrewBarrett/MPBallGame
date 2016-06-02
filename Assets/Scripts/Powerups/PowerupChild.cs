@@ -50,6 +50,10 @@ public class PowerupChild : Powerup {
     public override void DoAttack()
     {
         Parent.GetComponent<AudioSource>().PlayOneShot(AttackSounds[Random.Range(0, AttackSounds.Length)]);
+        if (AttackSounds.Length <= 0)
+        {
+            Debug.LogError("We havent synced the powerup right and there is no attack sounds!!!!");
+        }
     }
 
 }
