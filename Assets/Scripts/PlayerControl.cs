@@ -8,6 +8,8 @@ public class PlayerControl : NetworkBehaviour
     //float myRotation = 0;
     // Use this for initialization
     public AudioClip KnifeEquipSound;
+    public AudioClip GunEquipSound;
+    public AudioClip[] GunShootSounds;
     public AudioClip[] KnifeStabSounds;
     public AudioClip[] DeathSounds;
     public GameObject bloodPrefab;
@@ -45,18 +47,29 @@ public class PlayerControl : NetworkBehaviour
         {
             powerup = new KnifePowerup(gameObject);
         }
+        else if (name == "gun")
+        {
+            powerup = new GunPowerup(gameObject);
+        }
         else
         {
-            Debug.LogError("What the fuck powerup is this?????");
+            Debug.LogError("What the fuck powerup is this????? " + name);
         }
     }
 
     public void OnGUI()
     {
+        if (!isLocalPlayer)
+            return;
         if(GUI.Button(new Rect(10,200,200,20),"Debug Equip Knife"))
         {
             powerup.Destroy();
             powerup = new KnifePowerup(gameObject);
+        }
+        if (GUI.Button(new Rect(10, 230, 200, 20), "Debug Equip Gun"))
+        {
+            powerup.Destroy();
+            powerup = new GunPowerup(gameObject);
         }
     }
 

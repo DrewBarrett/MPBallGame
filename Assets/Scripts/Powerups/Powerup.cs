@@ -9,7 +9,7 @@ public class Powerup {
     public GameObject PowerupObject;
     public AudioClip EquipSound = null;
 
-    public void OnLeftClick()
+    public virtual void OnLeftClick()
     {
         Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Debug.DrawLine(Parent.transform.position, target, Color.red, .10f);
