@@ -330,8 +330,6 @@ MonoBehaviour:
   DeathSounds:
   - {fileID: 8300000, guid: 2b167de524609ae4ea48f2d3d56f071f, type: 3}
   - {fileID: 8300000, guid: 4a8fb64aa41bdd846879b280aa9c5bb7, type: 3}
-  - {fileID: 8300000, guid: 47f41ba93d6a4d94dbaffeb82fd6ff8c, type: 3}
-  - {fileID: 8300000, guid: e3c7fb7c055498243bc93958e9d92c61, type: 3}
   bloodPrefab: {fileID: 148604, guid: 3f323ffc5af32ca45a657acabccebfa1, type: 2}
   _respawnText: {fileID: 0}
 --- !u!114 &11483820

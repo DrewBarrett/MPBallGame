@@ -8,7 +8,8 @@ public class GunPowerup : PowerupChild {
         Parent = parent;
         PowerupObject = FindChildOfName("gun");
         EquipSound = Parent.GetComponent<PlayerControl>().GunEquipSound;
-        Parent.GetComponent<PlayerControl>().CmdSetPowerup("gun");
+        AttackSounds = Parent.GetComponent<PlayerControl>().GunShootSounds;
+        //Parent.GetComponent<PlayerControl>().CmdSetPowerup("gun");
     }
 
     public override void OnLeftClick()
@@ -17,7 +18,9 @@ public class GunPowerup : PowerupChild {
             base.OnLeftClick();
         else
         {
-            Parent.GetComponent<AudioSource>().PlayOneShot(Parent.GetComponent<PlayerControl>().GunShootSounds[Random.Range(0, Parent.GetComponent<PlayerControl>().GunShootSounds.Length)]);
+            //Parent.GetComponent<AudioSource>().PlayOneShot(Parent.GetComponent<PlayerControl>().GunShootSounds[Random.Range(0, Parent.GetComponent<PlayerControl>().GunShootSounds.Length)]);
+            DoAttack();
+            Parent.GetComponent<PlayerControl>().CmdDoAttack();
             RaycastHit2D[] hit = Physics2D.RaycastAll(Parent.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition) - Parent.transform.position);
             foreach (RaycastHit2D target in hit)
             {

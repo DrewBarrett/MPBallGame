@@ -47,4 +47,9 @@ public class PowerupChild : Powerup {
         return null;
     }
 
+    public override void DoAttack()
+    {
+        Parent.GetComponent<AudioSource>().PlayOneShot(AttackSounds[Random.Range(0, AttackSounds.Length)]);
+    }
+
 }

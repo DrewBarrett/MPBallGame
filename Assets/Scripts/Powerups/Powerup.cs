@@ -8,6 +8,7 @@ public class Powerup {
     public GameObject Parent;
     public GameObject PowerupObject;
     public AudioClip EquipSound = null;
+    public AudioClip[] AttackSounds = null;
 
     public virtual void OnLeftClick()
     {
@@ -46,5 +47,10 @@ public class Powerup {
     public virtual void Update()
     {
         //do updates here
+    }
+
+    public virtual void DoAttack()
+    {
+
     }
 }

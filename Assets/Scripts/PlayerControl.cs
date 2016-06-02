@@ -15,19 +15,22 @@ public class PlayerControl : NetworkBehaviour
     public GameObject bloodPrefab;
     public GameObject _respawnText;
     [SyncVar(hook = "OnPowerUpChange")]
-    string PowerUpName;
+    string PowerUpName = null;
     public Powerup powerup;
     bool dead;
     void Start()
     {
         dead = false;
-        powerup = new KnifePowerup(gameObject);
+        if (PowerUpName != null)
+            OnPowerUpChange(PowerUpName);
         //CmdSetPowerup("");
         _respawnText = GameObject.Find("RespawnText");
         if (isLocalPlayer)
         {
             GetComponent<Rigidbody2D>().velocity = transform.up * 2;
             CmdRequestUpdate();
+            powerup = new KnifePowerup(gameObject);
+            CmdSetPowerup("knife");
         }
     }
     [Command]
@@ -65,11 +68,13 @@ public class PlayerControl : NetworkBehaviour
         {
             powerup.Destroy();
             powerup = new KnifePowerup(gameObject);
+            CmdSetPowerup("knife");
         }
         if (GUI.Button(new Rect(10, 230, 200, 20), "Debug Equip Gun"))
         {
             powerup.Destroy();
             powerup = new GunPowerup(gameObject);
+            CmdSetPowerup("gun");
         }
     }
 
@@ -206,11 +211,18 @@ public class PlayerControl : NetworkBehaviour
     [ClientRpc]
     void RpcAttacked(Vector3 attackSpot)
     {
-        GetComponent<AudioSource>().Stop();
-        GetComponent<AudioSource>().PlayOneShot(KnifeStabSounds[Random.Range(0, KnifeStabSounds.Length)]);
+        //GetComponent<AudioSource>().Stop();
+        //GetComponent<AudioSource>().PlayOneShot(KnifeStabSounds[Random.Range(0, KnifeStabSounds.Length)]);
         GameObject blood = (GameObject)Instantiate(bloodPrefab, attackSpot, Quaternion.identity);
         Destroy(blood, 10f);
-        GetComponent<AudioSource>().PlayOneShot(DeathSounds[Random.Range(0, KnifeStabSounds.Length)]);
+        GetComponent<AudioSource>().PlayOneShot(DeathSounds[Random.Range(0, DeathSounds.Length)]);
+    }
+    [Command]
+    public void CmdDoAttack()
+    {
+        if (isLocalPlayer)
+            return;
+        powerup.DoAttack();
     }
     [Command]
     void CmdBeginRespawn()
