@@ -9,6 +9,7 @@ public class PlayerControl : NetworkBehaviour
     // Use this for initialization
     public AudioClip KnifeEquipSound;
     public AudioClip GunEquipSound;
+    public AudioClip GunEmptySound;
     public AudioClip[] GunShootSounds;
     public AudioClip[] KnifeStabSounds;
     public AudioClip[] DeathSounds;

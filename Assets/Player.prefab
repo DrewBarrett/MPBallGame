@@ -337,6 +337,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   KnifeEquipSound: {fileID: 8300000, guid: 8fb575cd5fa42ee499a0d474a820fc03, type: 3}
   GunEquipSound: {fileID: 8300000, guid: 1e75cc615256e4643a7e5442a870cda8, type: 3}
+  GunEmptySound: {fileID: 8300000, guid: 0db0d54f6df629f4da9aeea2ad01539f, type: 3}
   GunShootSounds:
   - {fileID: 8300000, guid: 23eef676fcfa949408309e8da150c9b5, type: 3}
   - {fileID: 8300000, guid: a0a184a80e3c4ab49abcf58637a94ab7, type: 3}
