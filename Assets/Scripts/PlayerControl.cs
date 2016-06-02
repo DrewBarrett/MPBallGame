@@ -12,16 +12,51 @@ public class PlayerControl : NetworkBehaviour
     public AudioClip[] DeathSounds;
     public GameObject bloodPrefab;
     public GameObject _respawnText;
-    bool knifeOut = false;
+    [SyncVar(hook = "OnPowerUpChange")]
+    string PowerUpName;
+    public Powerup powerup;
     bool dead;
     void Start()
-    {   
+    {
         dead = false;
+        powerup = new KnifePowerup(gameObject);
+        //CmdSetPowerup("");
         _respawnText = GameObject.Find("RespawnText");
-        if(isLocalPlayer)
+        if (isLocalPlayer)
         {
             GetComponent<Rigidbody2D>().velocity = transform.up * 2;
             CmdRequestUpdate();
+        }
+    }
+    [Command]
+    public void CmdSetPowerup(string name)
+    {
+        PowerUpName = name;
+    }
+
+    void OnPowerUpChange(string name)
+    {
+        //if we are the local player we know what powerup we have equiped!
+        if (isLocalPlayer)
+            return;
+
+        PowerUpName = name;
+        if (name == "knife")
+        {
+            powerup = new KnifePowerup(gameObject);
+        }
+        else
+        {
+            Debug.LogError("What the fuck powerup is this?????");
+        }
+    }
+
+    public void OnGUI()
+    {
+        if(GUI.Button(new Rect(10,200,200,20),"Debug Equip Knife"))
+        {
+            powerup.Destroy();
+            powerup = new KnifePowerup(gameObject);
         }
     }
 
@@ -45,15 +80,19 @@ public class PlayerControl : NetworkBehaviour
 
             //GetComponent<Rigidbody2D>().rotation += 180;
             //Debug.Log(gameObject.transform.rotation.ToString());
-            gameObject.transform.rotation = Quaternion.Euler(0,0,180 + gameObject.transform.rotation.eulerAngles.z);
-            
+            gameObject.transform.rotation = Quaternion.Euler(0, 0, 180 + gameObject.transform.rotation.eulerAngles.z);
+
             GetComponent<Rigidbody2D>().velocity = transform.up * 2;
             GetComponent<NetworkTransform>().SetDirtyBit(1);
         }
-        else if (collision.gameObject.GetComponent<Health>() && knifeOut)
+        /*else if (collision.gameObject.GetComponent<Health>() && knifeOut)
         {
             
             CmdAttackGameObject(collision.gameObject, gameObject);
+        }*/
+        else
+        {
+            powerup.OnTriggerEnter(collision);
         }
     }
 
@@ -73,23 +112,17 @@ public class PlayerControl : NetworkBehaviour
             return;
         }
 
-        
+
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Debug.DrawLine(transform.position, target, Color.red, .10f);
-            //Gizmos.DrawLine(transform.position, target);
-            Vector3 targetRotation = transform.position - target;
-            float rot = Mathf.Atan2(targetRotation.x, -1 * targetRotation.y) * (180 / Mathf.PI);
-            //GetComponent<Rigidbody2D>().MoveRotation(rot);
-            gameObject.transform.rotation = Quaternion.Euler(0,0, rot);
-            GetComponent<Rigidbody2D>().velocity = transform.up * 2;
-            GetComponent<NetworkTransform>().SetDirtyBit(1);
-            //CmdSetRotation(rot);
+            powerup.OnLeftClick();
+
         }
         if (Input.GetMouseButtonDown(1))
         {
-            knifeOut = !knifeOut;
+            powerup.OnRightClick();
+
+            /*knifeOut = !knifeOut;
             if (knifeOut)
             {
                 GetComponent<AudioSource>().PlayOneShot(KnifeEquipSound);
@@ -97,57 +130,43 @@ public class PlayerControl : NetworkBehaviour
             //Debug.Log("Mouse clicked!");
             if (SetKnifing(knifeOut))
             {
-                CmdSetKnifing(knifeOut);
+                CmdSetWeaponVisible(knifeOut);
             }
             else
             {
                 Debug.LogError("Where the fuck did the knife go?????");
-            }
+            }*/
         }
 
 
-    }
-    bool SetKnifing(bool knifeStatus)
-    {
-        SpriteRenderer[] srs = gameObject.GetComponentsInChildren<SpriteRenderer>(true);
-        foreach (SpriteRenderer sr in srs)
-        {
-            //Debug.Log(sr.ToString());
-            if (sr.gameObject.name == "knife")
-            {
-                sr.gameObject.SetActive(knifeStatus);
-                //Debug.Log("We have changed our knife status to " + knifeStatus);
-                return true;
-            }
-        }
-        Debug.LogError("we have failed to change our knife status");
-        return false;
     }
     [Command]
-    void CmdSetKnifing(bool knifeStatus)
+    public void CmdSetWeaponVisible(bool weaponStatus)
     {
-        RpcSetKnifing(knifeStatus);
+        RpcSetWeaponVisible(weaponStatus);
     }
     [ClientRpc]
-    void RpcSetKnifing(bool knifeStatus)
+    void RpcSetWeaponVisible(bool weaponStatus)
     {
-        if(!isLocalPlayer)
+        if (!isLocalPlayer)
         {
-            SetKnifing(knifeStatus);
-            if(knifeStatus)
+            powerup.SetVisible(weaponStatus);
+            //SetKnifing(weaponStatus);
+            if (weaponStatus)
             {
-                GetComponent<AudioSource>().PlayOneShot(KnifeEquipSound);
+                GetComponent<AudioSource>().PlayOneShot(powerup.EquipSound);
             }
-        }else
+        }
+        else
         {
-            Debug.Log("Server told us to change our knife but fuck the server");
+            Debug.Log("Server told us to change our weapon but fuck the server");
         }
     }
     [Command]
-    void CmdAttackGameObject(GameObject target, GameObject attacker)
+    public void CmdAttackGameObject(GameObject target, GameObject attacker)
     {
         target.GetComponent<Health>().TakeDamage();
-        if(target.gameObject.tag == "Player")
+        if (target.gameObject.tag == "Player")
         {
             //if you stabbed a player
             attacker.GetComponent<PlayerInfo>().score += 1;
@@ -215,14 +234,15 @@ public class PlayerControl : NetworkBehaviour
 
     void StopExisting(bool shouldStop)
     {
-        
+
         dead = shouldStop;
         GetComponent<SpriteRenderer>().enabled = !shouldStop;
         GetComponent<CircleCollider2D>().enabled = !shouldStop;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-        knifeOut = false;
-        SetKnifing(knifeOut);
-        CmdSetKnifing(knifeOut);
+        //powerup.(knifeOut);
+        //powerup.SetVisible(false);
+        //CmdSetWeaponVisible(false);
+        powerup.Destroy();
     }
     //[Command]
     //void CmdSetRotation(float rot)
